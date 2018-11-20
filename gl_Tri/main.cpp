@@ -2,8 +2,26 @@
 
 #pragma comment(lib, "glew32.lib")
 
+//颜色
+const vec3 WHITE(1.0, 1.0, 1.0);
+const vec3 BLACK(0.0, 0.0, 0.0);
+const vec3 RED(1.0, 0.0, 0.0);
+const vec3 GREEN(0.0, 1.0, 0.0);
+const vec3 BLUE(0.0, 0.0, 1.0);
+const vec3 YELLOW(1.0, 1.0, 0.0);
+const vec3 ORANGE(1.0, 0.65, 0.0);
+const vec3 PURPLE(0.8, 0.0, 0.8);
+
+//顶点个数和颜色个数
 const int NUM_POINTS = 4;
 const int NUM_COLORS = 4;
+
+//主窗口
+GLuint Win;
+const int width = 512;
+const int height = 512;
+
+GLuint menu;
 
 void changeCenter(vec2 vertices[], vec2 center) {
 	for (int i = 0; i < NUM_POINTS; i++) {
@@ -25,7 +43,7 @@ void init() {
 	changeCenter(vertices, vec2(0.0, 0.1));
 	changeShape(vertices, 0.5);
 	vec3 colors[NUM_COLORS] = {
-		vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0),vec3(0.0, 1.0, 0.0)
+		YELLOW, BLUE, RED, ORANGE
 	};
 
 
@@ -67,25 +85,26 @@ void display(void)
 	glClear(GL_COLOR_BUFFER_BIT);
 	// 绘制所有点,GL_TRIANGLE_FAN是连续画三角形的意思，GL_TRIANGLES是只画一个三角形
 	glDrawArrays(GL_TRIANGLE_FAN, 0, NUM_POINTS);
-	glFlush();
+	glutSwapBuffers(); //由于开启了双缓存，所以使用这个函数而不是glFlush
+	//glFlush();
 }
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA);
-	glutInitWindowSize(512, 512);
+	glutInitDisplayMode(GLUT_RGBA | GL_DOUBLE);  //通过使用双缓存，使得画面更加柔顺
+	glutInitWindowSize(width, height);
 
 	// 检测是否使用了freeglut，并检测是否使用到了OpenGL 3.3
 	glutInitContextVersion(3, 3);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
-	glutCreateWindow("红色三角形");
-
+	Win = glutCreateWindow("红色三角形");
 	glewExperimental = GL_TRUE;
 	glewInit();
 
 	init();
 	glutDisplayFunc(display);
+
 	glutMainLoop();
 
 	return 0;
