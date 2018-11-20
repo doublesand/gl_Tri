@@ -2,15 +2,15 @@
 
 #pragma comment(lib, "glew32.lib")
 
-const int NUM_POINTS = 3;
-const int NUM_COLORS = 3;
+const int NUM_POINTS = 4;
+const int NUM_COLORS = 4;
 
 void init() {
-	vec2 vertices[3] = {
-		vec2(-0.75,0),vec2(0.0, 0.75), vec2(0.75, 0)
+	vec2 vertices[NUM_POINTS] = {
+		vec2(-0.75,0),vec2(0.0, 0.75), vec2(0.75, 0), vec2(0.0, -0.75)
 	};
-	vec3 colors[3] = {
-		vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0)
+	vec3 colors[NUM_COLORS] = {
+		vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0),vec3(0.0, 1.0, 0.0)
 	};
 
 	//创建顶点数组对象
@@ -49,8 +49,8 @@ void display(void)
 {
 	// 清理窗口
 	glClear(GL_COLOR_BUFFER_BIT);
-	// 绘制所有点
-	glDrawArrays(GL_TRIANGLES, 0, NUM_POINTS);
+	// 绘制所有点,GL_TRIANGLE_FAN是连续画三角形的意思，GL_TRIANGLES是只画一个三角形
+	glDrawArrays(GL_TRIANGLE_FAN, 0, NUM_POINTS);
 	glFlush();
 }
 
