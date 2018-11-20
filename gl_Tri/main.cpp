@@ -11,12 +11,19 @@ void changeCenter(vec2 vertices[], vec2 center) {
 	}
 }
 
+void changeShape(vec2 vertices[], double rate) {
+	for (int i = 0; i < NUM_POINTS; i++) {
+		vertices[i] = vertices[i] * rate;
+	}
+}
+
 void init() {
 	//一个窗口的宽度是2，左右分别是-1和1，所以超过1的都不能看见
 	vec2 vertices[NUM_POINTS] = {
 		vec2(-1.5,0),vec2(0.0, 1.0), vec2(1.0, 0), vec2(0.0, -1.0)
 	};
 	changeCenter(vertices, vec2(0.0, 0.1));
+	changeShape(vertices, 0.5);
 	vec3 colors[NUM_COLORS] = {
 		vec3(1.0, 0.0, 0.0), vec3(0.0, 1.0, 0.0), vec3(0.0, 0.0, 1.0),vec3(0.0, 1.0, 0.0)
 	};
