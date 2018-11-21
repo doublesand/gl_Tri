@@ -17,11 +17,12 @@ const int NUM_POINTS = 4;
 const int NUM_COLORS = 4;
 
 //主窗口
-GLuint Win;
+GLuint win;
 const int width = 512;
 const int height = 512;
 
 GLuint menu;
+double angle = 0;
 
 void changeCenter(vec2 vertices[], vec2 center) {
 	for (int i = 0; i < NUM_POINTS; i++) {
@@ -35,15 +36,19 @@ void changeShape(vec2 vertices[], double rate) {
 	}
 }
 
+void setSqure(vec2 vertices[]) {
+	for (int i = 0; i < NUM_POINTS; i++) {
+		double currentAngle = (M_PI / 4 + (M_PI / 2 * i)) + angle;
+		vertices[i] = vec2(sin(currentAngle), cos(currentAngle)) * 0.5;
+	}
+}
+
 void init() {
 	//一个窗口的宽度是2，左右分别是-1和1，所以超过1的都不能看见
-	vec2 vertices[NUM_POINTS] = {
-		vec2(-1.5,0),vec2(0.0, 1.0), vec2(1.0, 0), vec2(0.0, -1.0)
-	};
-	changeCenter(vertices, vec2(0.0, 0.1));
-	changeShape(vertices, 0.5);
+	vec2 vertices[NUM_POINTS];
+	setSqure(vertices);
 	vec3 colors[NUM_COLORS] = {
-		YELLOW, BLUE, RED, ORANGE
+		PURPLE, BLUE, RED, ORANGE
 	};
 
 
@@ -79,11 +84,46 @@ void init() {
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 }
 
+void idle() {  //空闲回调函数
+	angle += M_PI / 180;
+	if (angle > M_PI*2) {
+		angle - M_PI * 2;
+	}
+	glutPostRedisplay();
+}
+
+void menuEvents(int id) {
+	switch (id)
+	{
+	case 1:
+		exit(0);
+		break;
+	case 2:
+		glutIdleFunc(idle);
+		break;
+	case 3:
+		glutIdleFunc(NULL);
+		break;
+	}
+	
+	glutPostRedisplay();  //做了修改后就进行重新绘制窗口
+}
+
+void setupMenu() {
+	menu = glutCreateMenu(menuEvents);
+	glutAddMenuEntry("quit", 1);
+	glutAddMenuEntry("start rotation", 2);
+	glutAddMenuEntry("stop rotation", 3);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+}
+
+
 void display(void)
 {
+	init();
 	// 清理窗口
 	glClear(GL_COLOR_BUFFER_BIT);
-	// 绘制所有点,GL_TRIANGLE_FAN是连续画三角形的意思，GL_TRIANGLES是只画一个三角形
+	// 绘制所有点,GL_TRIANGLE_FAN是 连续画三角形的意思，GL_TRIANGLES是只画一个三角形
 	glDrawArrays(GL_TRIANGLE_FAN, 0, NUM_POINTS);
 	glutSwapBuffers(); //由于开启了双缓存，所以使用这个函数而不是glFlush
 	//glFlush();
@@ -91,18 +131,19 @@ void display(void)
 
 int main(int argc, char **argv) {
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_RGBA | GL_DOUBLE);  //通过使用双缓存，使得画面更加柔顺
+	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);  //通过使用双缓存，使得画面更加柔顺
 	glutInitWindowSize(width, height);
+	win = glutCreateWindow("红色三角形");
 
 	// 检测是否使用了freeglut，并检测是否使用到了OpenGL 3.3
 	glutInitContextVersion(3, 3);
 	glutInitContextProfile(GLUT_CORE_PROFILE);
 
-	Win = glutCreateWindow("红色三角形");
 	glewExperimental = GL_TRUE;
 	glewInit();
 
 	init();
+	setupMenu();
 	glutDisplayFunc(display);
 
 	glutMainLoop();
