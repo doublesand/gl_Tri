@@ -213,7 +213,7 @@ int main(int argc, char **argv) {
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE);  //通过使用双缓存，使得画面更加柔顺
 	glutInitWindowSize(width, height);
-	win = glutCreateWindow("红色三角形");
+	win = glutCreateWindow("二维交互图像入门");
 
 	// 检测是否使用了freeglut，并检测是否使用到了OpenGL 3.3
 	glutInitContextVersion(3, 3);
@@ -231,7 +231,7 @@ int main(int argc, char **argv) {
 	//添加子窗口,以下语义都是给子窗口的
 	subWin = glutCreateSubWindow(win, 0, 0, width / 4, height / 4);  
 	subInit();
-	glutDisplayFunc(subDisplay);
+	glutDisplayFunc(subDisplay);    //显示回调函数，只有显示回调才能刷新页面，不然一直都是这个窗口
 	glutKeyboardFunc(subKeyboard);
 
 	glutMainLoop();
