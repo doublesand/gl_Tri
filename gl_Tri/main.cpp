@@ -1,6 +1,8 @@
 #include <Angel.h>
-
+#include <iostream>
 #pragma comment(lib, "glew32.lib")
+
+using namespace std;
 
 //颜色
 const vec3 WHITE(1.0, 1.0, 1.0);
@@ -30,7 +32,7 @@ double angle = 0;
 //子窗口
 GLuint subWin;
 vec2 subVertices[3] = {vec2(-0.75,-0.75), vec2(0,0.75) ,vec2(0.75,-0.75)};
-vec3 subColors[3] = {BLUE, RED, GREEN};
+vec3 subColors[3] = {BLUE, BLUE, BLUE};
 
 void setSqure(vec2 vertices[]) {     //改变角度
 	for (int i = 0; i < NUM_POINTS; i++) {
@@ -101,6 +103,8 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'b':
 		colors[0] = BLUE;
 		break;
+	case 'o':
+		colors[0] = ORANGE;
 	}
 	glutPostWindowRedisplay(win);
 }
@@ -144,16 +148,22 @@ void display(void)
 void subKeyboard(unsigned char key, int x, int y) {
 	switch (key)
 	{
-	case '\033':
+	case 'q':
 		exit(EXIT_SUCCESS);
+		break;
+	case 'g':
+		subColors[0] = GREEN;
+		subColors[1] = GREEN;
+		subColors[2] = GREEN;
+		cout << "进来了，变绿" << endl;
 		break;
 	case 'b':
 		subColors[0] = BLUE;
-		break;
-	case 'o':
-		subColors[0] = ORANGE;
+		subColors[1] = BLUE;
+		subColors[2] = BLUE;
 		break;
 	}
+	// 标记subWindow子窗口进行重绘
 	glutPostWindowRedisplay(subWin);
 }
 
@@ -221,7 +231,7 @@ int main(int argc, char **argv) {
 	//添加子窗口,以下语义都是给子窗口的
 	subWin = glutCreateSubWindow(win, 0, 0, width / 4, height / 4);  
 	subInit();
-	subDisplay();
+	glutDisplayFunc(subDisplay);
 	glutKeyboardFunc(subKeyboard);
 
 	glutMainLoop();
